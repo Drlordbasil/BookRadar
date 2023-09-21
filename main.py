@@ -92,31 +92,33 @@ class BookRecommendationSystem:
         if not self.books:
             return []
 
-        book_vectors = [
-            vector.tolist() for book in self.books for vector in [book.get_summary()]
-        ]
+        book_vectors = [vector.tolist() for book in self.books 
+                        for vector in [book.get_summary()]]
         similarity_scores = cosine_similarity([user_vector], book_vectors)[0]
         return similarity_scores
+
+    def print_recommendations(self, recommendations: List[Book]):
+        print("Personalized Book Recommendations:")
+        if recommendations:
+            for i, book in enumerate(recommendations, start=1):
+                print(f"{i}.")
+                print(f"Title: {book.title}")
+                print(f"Author: {book.author}")
+                print(f"Genre: {book.genre}")
+                print(f"Rating: {book.rating}")
+                print(f"Reviews: {book.reviews}")
+                print(f"Summary: {book.get_summary()[:100]}...")
+                print(f"URL: {book.url}")
+                print()
+        else:
+            print("No book recommendations found.")
 
 
 if __name__ == "__main__":
     recommendation_system = BookRecommendationSystem()
     recommendation_system.scrape_book_data()
 
-    user_input = "science fiction"
+    user_input = input("Enter a genre you like: ")
     recommendations = recommendation_system.get_book_recommendations(user_input)
 
-    print("Personalized Book Recommendations:")
-    if recommendations:
-        for i, book in enumerate(recommendations, start=1):
-            print(f"{i}.")
-            print(f"Title: {book.title}")
-            print(f"Author: {book.author}")
-            print(f"Genre: {book.genre}")
-            print(f"Rating: {book.rating}")
-            print(f"Reviews: {book.reviews}")
-            print(f"Summary: {book.get_summary()[:100]}...")
-            print(f"URL: {book.url}")
-            print()
-    else:
-        print("No book recommendations found.")
+    recommendation_system.print_recommendations(recommendations)
