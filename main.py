@@ -37,27 +37,27 @@ class BookRecommendationSystem:
 
         response = requests.get(url)
         soup = BeautifulSoup(response.content, "html.parser")
-        book_elements = soup.findAll("div", class_="coverWrapper")
+        book_elements = soup.select("div.coverWrapper")
 
         for book_element in book_elements:
-            title_element = book_element.find("a", class_="bookTitle")
+            title_element = book_element.select_one("a.bookTitle")
             title = title_element.text.strip()
-            url = "https://www.goodreads.com" + title_element["href"]
+            url = f"https://www.goodreads.com{title_element['href']}"
 
-            author_element = book_element.find("a", class_="authorName")
+            author_element = book_element.select_one("a.authorName")
             author = author_element.text.strip()
 
-            genre_element = book_element.find("a", class_="actionLinkLite")
+            genre_element = book_element.select_one("a.actionLinkLite")
             genre = genre_element.text.strip()
 
-            rating_element = book_element.find("span", class_="minirating")
+            rating_element = book_element.select_one("span.minirating")
             rating = float(rating_element.text.strip().split()[1])
 
-            reviews_element = book_element.find("span", class_="reviewsCount")
+            reviews_element = book_element.select_one("span.reviewsCount")
             reviews = int(reviews_element.text.strip().split()
                           [0].replace(",", ""))
 
-            summary_element = book_element.find("div", class_="readable")
+            summary_element = book_element.select_one("div.readable")
             if summary_element:
                 summary = summary_element.text.strip()
             else:
@@ -116,10 +116,12 @@ class BookRecommendationSystem:
     def run_recommendation_system(self):
         self.scrape_book_data()
 
-        user_input = input("Enter a genre you like: ")
-        recommendations = self.get_book_recommendations(user_input)
-
-        self.print_recommendations(recommendations)
+        while True:
+            user_input = input("Enter a genre you like (or 'exit' to quit): ")
+            if user_input.lower() == "exit":
+                break
+            recommendations = self.get_book_recommendations(user_input)
+            self.print_recommendations(recommendations)
 
 
 if __name__ == "__main__":
