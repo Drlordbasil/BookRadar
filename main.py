@@ -27,6 +27,9 @@ class Book:
     def get_summary(self) -> str:
         return self.summary
 
+    def __str__(self) -> str:
+        return f"Title: {self.title}\nAuthor: {self.author}\nGenre: {self.genre}\nRating: {self.rating}\nReviews: {self.reviews}\nSummary: {self.summary[:100]}...\nURL: {self.url}\n"
+
 
 class BookRecommendationSystem:
     def __init__(self) -> None:
@@ -102,14 +105,7 @@ class BookRecommendationSystem:
         if recommendations:
             for i, book in enumerate(recommendations, start=1):
                 print(f"{i}.")
-                print(f"Title: {book.title}")
-                print(f"Author: {book.author}")
-                print(f"Genre: {book.genre}")
-                print(f"Rating: {book.rating}")
-                print(f"Reviews: {book.reviews}")
-                print(f"Summary: {book.get_summary()[:100]}...")
-                print(f"URL: {book.url}")
-                print()
+                print(book)
         else:
             print("No book recommendations found.")
 
