@@ -54,7 +54,8 @@ class BookRecommendationSystem:
             rating = float(rating_element.text.strip().split()[1])
 
             reviews_element = book_element.find("span", class_="reviewsCount")
-            reviews = int(reviews_element.text.strip().split()[0].replace(",", ""))
+            reviews = int(reviews_element.text.strip().split()
+                          [0].replace(",", ""))
 
             summary_element = book_element.find("div", class_="readable")
             if summary_element:
@@ -92,8 +93,7 @@ class BookRecommendationSystem:
         if not self.books:
             return []
 
-        book_vectors = [vector.tolist() for book in self.books 
-                        for vector in [book.get_summary()]]
+        book_vectors = [vector.tolist() for book in self.books]
         similarity_scores = cosine_similarity([user_vector], book_vectors)[0]
         return similarity_scores
 
@@ -113,12 +113,15 @@ class BookRecommendationSystem:
         else:
             print("No book recommendations found.")
 
+    def run_recommendation_system(self):
+        self.scrape_book_data()
+
+        user_input = input("Enter a genre you like: ")
+        recommendations = self.get_book_recommendations(user_input)
+
+        self.print_recommendations(recommendations)
+
 
 if __name__ == "__main__":
     recommendation_system = BookRecommendationSystem()
-    recommendation_system.scrape_book_data()
-
-    user_input = input("Enter a genre you like: ")
-    recommendations = recommendation_system.get_book_recommendations(user_input)
-
-    recommendation_system.print_recommendations(recommendations)
+    recommendation_system.run_recommendation_system()
