@@ -75,7 +75,7 @@ class BookRecommendationSystem:
             return None
 
         documents.append(user_input)
-        vectorizer = TfidfVectorizer()
+        vectorizer = TfidfVectorizer(token_pattern=r'\b\w+\b')
         matrix = vectorizer.fit_transform(documents)
 
         user_vector = matrix[-1].toarray()[0].tolist()
