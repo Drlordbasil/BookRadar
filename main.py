@@ -1,24 +1,41 @@
-from typing import List, Optional
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
-from bs4 import BeautifulSoup
+# Enhanced by AI:
 import requests
-Here are the enhancements made to the code:
+from bs4 import BeautifulSoup
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+from typing import List, Optional
+1. Import statements have been moved to the top and grouped for better organization:
+    ```python
+    from typing import List, Optional
+    from sklearn.metrics.pairwise import cosine_similarity
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from bs4 import BeautifulSoup
+    import requests
+    ```
 
-1. Added docstrings to all classes and methods to improve code readability and documentation.
-2. Moved the import statements to the top and grouped them for better organization.
-3. Added type hints to function arguments and return types.
-4. Renamed the `BookRecommendationSystem` class to `BookRecommender` to provide a more concise name.
-5. Extracted the URL for scraping into a constant variable to improve code maintainability.
-6. Simplified the extraction of book information using the `select` method in BeautifulSoup.
-7. Changed the `get_summary` method in the `Book` class to a property decorator for improved access.
-8. Simplified the code in the `get_book_recommendations` method by using list comprehension and slicing.
-9. Added error handling in case the user input has no matching books.
-10. Added type hints and improved variable names in the `preprocess_input` and `_calculate_similarity` methods.
-11. Changed the `print_recommendations` method to use f-strings for improved readability.
-12. Added a main function to encapsulate the creation of the `BookRecommender` instance and running the recommendation system.
+2. The `BookRecommendationSystem` class has been renamed to `BookRecommender` for a more concise name. Additionally, docstrings have been added to improve code readability and documentation.
 
-Updated code:
+3. The code now uses type hints to specify the argument types and return types in function signatures. This improves code readability and helps with catching type errors early.
+
+4. A constant variable `URL` has been extracted to store the URL for scraping. This improves code maintainability by separating the URL from the scraping logic and making it easier to update in the future.
+
+5. The extraction of book information using BeautifulSoup has been simplified. The `select` method allows us to select specific elements based on CSS selectors, reducing the number of lines needed to extract the book information.
+
+6. The `get_summary` method in the `Book` class has been converted into a property decorator. This simplifies the code and allows the summary to be accessed as an attribute(`book.summary`) instead of as a method(`book.get_summary()`).
+
+7. The `get_book_recommendations` method in the `BookRecommender` class has been simplified using list comprehension and slicing. This reduces the number of lines needed to extract the top 5 recommendations based on similarity scores.
+
+8. Error handling has been added in case the user input has no matching books. If there are no book recommendations, an empty list is returned.
+
+9. The `preprocess_input` and `_calculate_similarity` methods have been improved with type hints and variable name updates. This improves code readability and clarity.
+
+10. The `print_recommendations` method uses f-strings for improved readability when printing the book recommendations.
+
+11. A `main` function has been added to encapsulate the creation of the `BookRecommender` instance and running the recommendation system. This separates the main logic of the program from the class definition, making it easier to understand and test.
+
+Overall, these enhancements improve the readability, maintainability, and functionality of the code.
+
+Here's the refactored code with explanations for each change:
 
 ```python
 
@@ -39,6 +56,9 @@ class Book:
 
     @property
     def summary(self) -> str:
+        """
+        A property that returns a shortened summary of the book.
+        """
         return self._summary[:100] + "..." if len(self._summary) > 100 else self._summary
 
     def __str__(self) -> str:
@@ -55,7 +75,7 @@ class BookRecommender:
 
     def scrape_book_data(self) -> None:
         """
-        Scrapes book data from Goodreads website.
+        Scrapes book data from the Goodreads website.
         """
         URL = "https://www.goodreads.com/genre/show/19-science-fiction"
         response = requests.get(URL)
@@ -81,10 +101,7 @@ class BookRecommender:
                           [0].replace(",", ""))
 
             summary_element = book_element.select_one("div.readable")
-            if summary_element:
-                summary = summary_element.text.strip()
-            else:
-                summary = "Summary not available"
+            summary = summary_element.text.strip() if summary_element else "Summary not available"
 
             book = Book(title, author, genre, rating, reviews, url, summary)
             self.books.append(book)
@@ -153,21 +170,40 @@ class BookRecommender:
             recommendations = self.get_book_recommendations(user_input)
             self.print_recommendations(recommendations)
 
-    """'''
-    Entry point for the program.
-    
-    This function serves as the entry point of the program. It is responsible for executing the main logic of the program
-    and coordinating the flow of control between different functions and components.
-    
-    Parameters:
-        None
-    
-    Returns:
-        None
-'''"""
+    """The given code snippet is a prompt that asks us to provide a docstring for a Python function named `main`. The code itself is missing, so we'll focus on improving the documentation instead.
+
+Firstly, let's define the `main` function with a docstring that clearly describes its purpose, inputs, and outputs. Here's a refactored version of the code with an informative docstring:
+
+```python
+def main():
+    """
+    Perform the main program logic.
+
+    This function is the entry point of the program and executes the main
+    program logic. It does not take any arguments and does not return any value.
+    """
+    # Add your main program logic here
+
+```
+
+In the docstring, I have provided a brief summary of what the function does and its role as the entry point of the program. I also mentioned that it doesn't take any arguments and doesn't return any value. 
+
+Remember, a good docstring should provide clear and concise information about the purpose, inputs, outputs, and any other relevant details of the function."""
 
 
 def main() -> None:
+    """
+    Entry point for the program.
+
+    This function serves as the entry point of the program. It is responsible for executing the main logic of the program
+    and coordinating the flow of control between different functions and components.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
     recommendation_system = BookRecommender()
     recommendation_system.run_recommendation_system()
 
@@ -176,4 +212,4 @@ if __name__ == "__main__":
     main()
 ```
 
-These enhancements improve the readability, maintainability, and functionality of the code.
+I hope this explanation helps you understand the changes made. Let me know if you have any further questions!
