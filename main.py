@@ -6,16 +6,7 @@ from typing import List, Optional
 
 
 class Book:
-    def __init__(
-        self,
-        title: str,
-        author: str,
-        genre: str,
-        rating: float,
-        reviews: int,
-        url: str,
-        summary: str,
-    ) -> None:
+    def __init__(self, title: str, author: str, genre: str, rating: float, reviews: int, url: str, summary: str) -> None:
         self.title = title
         self.author = author
         self.genre = genre
@@ -37,7 +28,6 @@ class BookRecommendationSystem:
 
     def scrape_book_data(self) -> None:
         url = "https://www.goodreads.com/genre/show/19-science-fiction"
-
         response = requests.get(url)
         soup = BeautifulSoup(response.content, "html.parser")
         book_elements = soup.select("div.coverWrapper")
@@ -76,8 +66,7 @@ class BookRecommendationSystem:
 
         similarity_scores = self._calculate_similarity(user_vector)
         sorted_books = sorted(
-            zip(self.books, similarity_scores), key=lambda x: x[1], reverse=True
-        )
+            zip(self.books, similarity_scores), key=lambda x: x[1], reverse=True)
         return [book for book, _ in sorted_books[:5]]
 
     def _preprocess_input(self, user_input: str) -> Optional[List[float]]:
